@@ -1,0 +1,25 @@
+<div id="game-stage">
+    <div id="player"></div>
+    <div id="score-board">Score: 0</div>
+</div>
+<div id="msg">Press SPACE to Jump</div>
+
+<style>
+    body { background: #1a1a1a; color: white; font-family: sans-serif; overflow: hidden; }
+    #game-stage { 
+        width: 800px; height: 200px; border-bottom: 4px solid #00f2ff; 
+        position: relative; margin: 50px auto; background: #222;
+        box-shadow: 0 10px 20px rgba(0, 242, 255, 0.2);
+    }
+    #player { 
+        width: 30px; height: 30px; background: #ff00ff; 
+        position: absolute; bottom: 0; left: 50px;
+        box-shadow: 0 0 15px #ff00ff;
+    }
+    .obstacle { 
+        width: 20px; height: 40px; background: #00f2ff; 
+        position: absolute; bottom: 0; 
+    }
+    #score-board { position: absolute; top: 10px; left: 10px; font-size: 20px; }
+    #msg { text-align: center; color: #888; }
+</style>

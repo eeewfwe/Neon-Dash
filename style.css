@@ -1,0 +1,51 @@
+#player { 
+    background: #ff00ff; /* Hot Pink */
+    box-shadow: 0 0 15px #ff00ff; /* The "Glow" */
+}
+/* 1. The Backdrop */
+body { 
+    background: #1a1a1a; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; /* Centers the game on the screen */
+    margin: 0;
+}
+
+/* 2. The Game World */
+#game-stage { 
+    width: 800px; 
+    height: 200px; 
+    background: #222;
+    border-bottom: 4px solid #00f2ff; /* The "Floor" */
+    position: relative;
+    overflow: hidden; /* Hides obstacles once they pass the left edge */
+}
+
+/* 3. The Player Character */
+#player { 
+    width: 35px; 
+    height: 35px; 
+    background: #ff00ff; 
+    position: absolute; 
+    bottom: 0; /* Starts on the floor */
+    left: 50px;
+    border-radius: 4px;
+    box-shadow: 0 0 20px #ff00ff;
+}
+
+/* 4. The Obstacles (Enemies) */
+.obstacle { 
+    width: 25px; 
+    height: 45px; 
+    background: #00f2ff; 
+    position: absolute; 
+    bottom: 0;
+    box-shadow: 0 0 15px #00f2ff;
+}
+@media (max-width: 600px) {
+    #game-stage {
+        width: 100%; /* Spans the full width of the phone */
+        height: 150px;
+    }
+}
