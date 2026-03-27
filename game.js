@@ -1,82 +1,106 @@
+// 1. Setup Variables
 const player = document.getElementById('player');
 const stage = document.getElementById('game-stage');
 const scoreBoard = document.getElementById('score-board');
 
 let isJumping = false;
 let gravity = 0.9;
-let position = 0; // Distance from the floor
+let position = 0; 
 let score = 0;
 let isGameOver = false;
 
-// 1. Jump Logic
+// Load High Score from phone memory
+let highScore = localStorage.getItem('neonDashHighScore') || 0;
+
+// 2. The Jump Logic (Physics)
 function jump() {
-    if (isJumping) return;
-    let velocity = 15;
+    if (isJumping || isGameOver) return;
+    
     isJumping = true;
+    let velocity = 15; // Initial upward thrust
 
     let timerId = setInterval(() => {
-        // Fall down logic
-        if (velocity < -15) {
-            clearInterval(timerId);
+        // Apply Gravity
+        position += velocity;
+        velocity -= gravity;
+        
+        // Ground Collision
+        if (position <= 0) {
+            position = 0;
+            velocity = 0;
             isJumping = false;
+            clearInterval(timerId);
         }
         
-        // Apply velocity to position
-        position += velocity;
-        velocity -= gravity; // Gravity pulls velocity down
-        
-        // Keep player above ground
-        if (position < 0) position = 0;
         player.style.bottom = position + 'px';
     }, 20);
 }
 
-// 2. Obstacle Logic
+// 3. The Obstacle & Collision Logic
 function createObstacle() {
     if (isGameOver) return;
 
-    let obstaclePos = 800;
+    let obstaclePos = 600; // Starting at the right edge
     const obstacle = document.createElement('div');
     obstacle.classList.add('obstacle');
     stage.appendChild(obstacle);
     obstacle.style.left = obstaclePos + 'px';
 
     let obstacleTimer = setInterval(() => {
-        // Collision Detection
-        if (obstaclePos > 50 && obstaclePos < 80 && position < 40) {
+        // COLLISION DETECTION MATH
+        // Player is at left: 50px, width: 35px. 
+        // We check if obstacle is between 50-85px AND player is on the ground.
+        if (obstaclePos > 50 && obstaclePos < 85 && position < 45) {
+            handleGameOver();
             clearInterval(obstacleTimer);
-            isGameOver = true;
-            alert('Game Over! Score: ' + score);
-            location.reload(); // Restart
         }
 
-        obstaclePos -= 10;
+        obstaclePos -= (7 + score / 10); // Gets faster as score increases!
         obstacle.style.left = obstaclePos + 'px';
 
-        // Remove off-screen obstacles and count score
-        if (obstaclePos < -20) {
+        // Scored a point?
+        if (obstaclePos < -25) {
             clearInterval(obstacleTimer);
             stage.removeChild(obstacle);
-            score++;
-            scoreBoard.innerText = "Score: " + score;
+            if (!isGameOver) {
+                score++;
+                scoreBoard.innerText = "Score: " + score;
+            }
         }
     }, 20);
 
-    // Randomize next obstacle timing
-    if (!isGameOver) setTimeout(createObstacle, Math.random() * 2000 + 700);
+    // Random spawn time for next obstacle
+    let nextSpawn = Math.random() * 2000 + 800;
+    if (!isGameOver) setTimeout(createObstacle, nextSpawn);
 }
 
-// Controls
+// 4. Game Over Handling
+function handleGameOver() {
+    isGameOver = true;
+    player.classList.add('dead');
+
+    // Save High Score
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('neonDashHighScore', highScore);
+    }
+
+    setTimeout(() => {
+        alert(`GAME OVER\nScore: ${score}\nBest: ${highScore}`);
+        location.reload(); 
+    }, 400);
+}
+
+// 5. Controls (Keyboard + Mobile Touch)
 document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') jump();
+    if (e.code === 'Space' || e.code === 'ArrowUp') jump();
 });
 
-createObstacle();
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-}
-// Add this alongside your keydown listener
 document.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // Prevents zooming on double tap
+    // Prevents zooming/scrolling while tapping
+    if (e.target.id !== 'start-btn') e.preventDefault();
     jump();
-});
+}, {passive: false});
+
+// 6. Start the Game
+createObstacle();

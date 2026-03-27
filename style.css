@@ -1,51 +1,94 @@
-#player { 
-    background: #ff00ff; /* Hot Pink */
-    box-shadow: 0 0 15px #ff00ff; /* The "Glow" */
-}
-/* 1. The Backdrop */
-body { 
-    background: #1a1a1a; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    height: 100vh; /* Centers the game on the screen */
+/* 1. Global Reset & App Feel */
+* {
+    box-sizing: border-box;
     margin: 0;
+    padding: 0;
+    /* Prevents the blue highlight when tapping on mobile */
+    -webkit-tap-highlight-color: transparent;
+    /* Prevents accidental zooming/scrolling while playing */
+    touch-action: manipulation;
 }
 
-/* 2. The Game World */
-#game-stage { 
-    width: 800px; 
-    height: 200px; 
+body {
+    background-color: #1a1a1a; /* Dark Cyberpunk background */
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden; /* Prevents the whole page from bouncing */
+}
+
+/* 2. The Game Stage */
+#game-stage {
+    width: 600px;
+    height: 200px;
     background: #222;
-    border-bottom: 4px solid #00f2ff; /* The "Floor" */
+    border-bottom: 4px solid #00f2ff; /* Neon Floor */
     position: relative;
-    overflow: hidden; /* Hides obstacles once they pass the left edge */
+    overflow: hidden; /* Hides obstacles that go off-screen */
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
 }
 
-/* 3. The Player Character */
-#player { 
-    width: 35px; 
-    height: 35px; 
-    background: #ff00ff; 
-    position: absolute; 
-    bottom: 0; /* Starts on the floor */
+/* 3. The Player */
+#player {
+    width: 35px;
+    height: 35px;
+    background: #ff00ff; /* Neon Pink */
+    position: absolute;
+    bottom: 0;
     left: 50px;
     border-radius: 4px;
-    box-shadow: 0 0 20px #ff00ff;
+    box-shadow: 0 0 15px #ff00ff;
+    transition: background 0.2s; /* Smooth color change on death */
 }
 
-/* 4. The Obstacles (Enemies) */
-.obstacle { 
-    width: 25px; 
-    height: 45px; 
-    background: #00f2ff; 
-    position: absolute; 
+/* 4. The Obstacles */
+.obstacle {
+    width: 25px;
+    height: 45px;
+    background: #00f2ff; /* Neon Blue */
+    position: absolute;
     bottom: 0;
     box-shadow: 0 0 15px #00f2ff;
 }
+
+/* 5. UI Elements */
+#score-board {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 10px #00f2ff;
+}
+
+#msg {
+    margin-top: 20px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* 6. Death Animation */
+@keyframes shake-red {
+    0% { transform: translateX(0); background: #ff0000; }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); background: #7a0000; }
+}
+
+.dead {
+    animation: shake-red 0.3s ease-in-out forwards;
+    box-shadow: 0 0 30px #ff0000 !important;
+}
+
+/* 7. Mobile Responsiveness */
 @media (max-width: 600px) {
     #game-stage {
-        width: 100%; /* Spans the full width of the phone */
-        height: 150px;
+        width: 95vw; /* Fills most of the phone screen width */
     }
 }
