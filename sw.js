@@ -5,7 +5,9 @@ const ASSETS = [
     'game.js',
     'manifest.json',
     'icon-192.png',
-    'icon-512.png'
+    'icon-512.png',
+    'jump.mp3', // Add this
+    'crash.mp3',  // Add this
 ];
 
 // 1. Install Event: Save all files to the phone's cache
